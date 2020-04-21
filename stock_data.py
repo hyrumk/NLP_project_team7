@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 
-def stock_price_data(company_ticker, start_date, end_date, price_type):
+def stock_price_data(company_ticker, start_date = 'start', end_date = 'end', price_type = 'Open'):
     '''
     Gives the stock data of a given company in chronological order.
 
@@ -26,7 +26,7 @@ def stock_price_data(company_ticker, start_date, end_date, price_type):
 
 def stock_price_interval(company_ticker, interval, start_date = 'start', end_date = 'end', price_type = 'Open'):
     '''
-    Filters the stock price data of a given company in a given interval.
+    Filters the stock price data of a given company separated in a given interval.
     e.g. stock_price_interval('AAPL', 7, '2010-10-10', '2020-03-20') will return price data of 2010-10-10 ~ 2020-03-20 in 7 day interval
         stock_price_interval('AAPL', 2) will return the entire price data in 2 day interval.
 
@@ -44,22 +44,63 @@ def stock_price_interval(company_ticker, interval, start_date = 'start', end_dat
     '''
 
     price_data = stock_price_data(company_ticker, start_date, end_date, price_type)
-    filtered_data = [(price_data.index[0], price_data[0])]
+    data_index = [price_data.index[0]]
+    data_element = [price_data[0]]
     next_date = price_data.index[0] + timedelta(days = interval)
-    for index, date in enumerate(price_data.index):
+    for date in price_data.index:
         if date < next_date:
             continue
         elif date == next_date:
-            filtered_data.append((date, price_data[index]))
+            data_index.append(date)
+            data_element.append(price_data[date])
             next_date += timedelta(days = interval)
         else:
-            filtered_data.append((date, price_data[index]))
-            delay = date - next_date
-            if timedelta(days = interval) - delay < timedelta(days = 1):
-                next_date = date + timedelta(days = 1)
-            else:
-                next_date = date + (timedelta(days = interval) - delay)
+            data_index.append(date)
+            data_element.append(price_data[date])
+            while next_date < date:
+                next_date += timedelta(days = 1)
+            next_date = date + timedelta(days = interval)
+
+    filtered_data = pd.Series(data_element, index = data_index)
 
     return filtered_data
 
 
+
+def stock_price_label(company_ticker, interval, percentage_rate = 3,
+                      start_date = 'start', end_date = 'end', price_type = 'Open'):
+    '''
+    Returns the label to feed as an input for a classifier.
+
+    The label will have three different types,
+    [1,0,0] when the stock price rised by over 3% than the day before.(percentage depends on given percentage_rate)
+    [0,1,0] when the stock price change is within the range of -3% ~ +3% (depends on given percentage_rate)
+    [0,0,1] when the stock price fell more than 3% than the day before.(depends on given percentage_rate)
+    **The returned data will not include the data for the given start_date,
+        as there is no price data from previous day to compare.**
+
+    :param company_ticker: refer to stock_price_interval()
+    :param interval: refer to stock_price_interval()
+    :param start_date: refer to stock_price_interval()
+    :param end_date: refer to stock_price_interval()
+    :param price_type:
+    :return: labeled data in pandas series (index: Timestamp, element: list)
+    '''
+    percentage_rate *= 0.01
+    stock_price_data = stock_price_interval(company_ticker, interval, start_date, end_date, price_type)
+    data_index = []
+    data_label = []
+    previous_price = stock_price_data[0]
+    for date in stock_price_data.index[1:]:
+        data_index.append(date)
+        rate = stock_price_data[date]/previous_price
+        previous_price = stock_price_data[date]
+        if rate > 1 + percentage_rate:
+            data_label.append([1,0,0])
+        elif rate < 1 - percentage_rate:
+            data_label.append([0,0,1])
+        else:
+            data_label.append([0,1,0])
+
+    labeled_data = pd.Series(data_label, index = data_index)
+    return labeled_data
