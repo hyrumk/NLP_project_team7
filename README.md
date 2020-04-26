@@ -3,22 +3,22 @@ The following project aims at predicting the trend of the stock price for a cert
 company through Natural Language Processing of relevant web articles.
 
 
-## INSTALLS:
+### INSTALLS:
 
-## Python Virtual Environment
+#### Python Virtual Environment
 * pip install virtualenv
 * (Mac) source ./env/bin/activate 
 
-### Numpy
+#### Numpy
 * pip install numpy
 * v. 1.18.3 
 
-### Pandas 
+#### Pandas 
 * pip install pandas
 * v. 1.0.3
 
-### Selenium - web crawling driver
+#### Selenium - web crawling driver
 * pip install selenium
 
-### BeautifulSoup - html parser
+#### BeautifulSoup - html parser
 * pip install bs4
