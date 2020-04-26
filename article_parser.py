@@ -72,11 +72,39 @@ def extract_text_from_url(url):
     return token_list
 
 
-def urls_from_domain(company_ticker, default_url='https://finance.yahoo.com/'):
+
+def date_convert(date_str):
+    month_ref = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    result_str =''
+    if 'hours ago' in date_str:
+        return str(datetime.date(datetime.now()))
+    else:
+        # Tokenize the date
+        #   ex) Apr 24, 2020 --> [Apr, 24, 2020]
+        #   Rearrange and format to 'YYYY - MM - DD'
+        date_str.replace(',', '')
+        tmp_list = date_str.split()
+
+        result_str = result_str + tmp_list[2]
+
+        month_index = month_ref.index(tmp_list[0])
+        if len(str(month_index + 1)) == 1:
+            result_str = result_str + '-0' + str(month_index + 1) + '-'
+        else:
+            result_str = result_str + '-' + str(month_index + 1) + '-'
+        
+        result_str = result_str + tmp_list[1]
+
+        result_str.replace(',', '')
+        return result_str
+
+
+
+
+def urls_from_domain(company_name, default_url='https://www.investing.com'):
     '''
     Extracting articles from provided domain, using the filter results based on the company_name
 
-    :param domain: Main url of the website
     :param company_ticker: ex) AMZN for Amazon
     :param start_date: 'YYYY - MM - DD' format
     :param end_date: 'YYYY - MM - DD' format
@@ -86,16 +114,14 @@ def urls_from_domain(company_ticker, default_url='https://finance.yahoo.com/'):
     '''
     
     #TODO: have to verify if company_ticker is valid.
-    domain_frame = 'https://finance.yahoo.com/quote/{tag}/?p={tag}'.format(tag = company_ticker)
+    domain_frame = 'https://www.investing.com/search/?q={keyword}&tab=news'.format(keyword = company_name)
 
-    #form a url list
-    url_list = []
+    url_triplet = []
 
     #scroll to bottom of url
     driver = webdriver.Chrome()
     driver.get(domain_frame)
 
-    # for some reason have to do manual scrolling for now ....
     lenOfPage = driver.execute_script(
         "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
     match = False
@@ -107,30 +133,59 @@ def urls_from_domain(company_ticker, default_url='https://finance.yahoo.com/'):
         
 
         html = driver.page_source
-
         soup = BeautifulSoup(html, 'html.parser')
 
-        for a in soup.find_all('a', href=True):
-            if a.has_attr('class') and 'mega-item-header-link' in a['class']:
-                #TODO: get time of the articles
+        link_data = []
+        date_data = []
+        for div in soup.find_all('div', {"class": "textDiv"}):
+            #TODO: get time of the articles
 
-                link = default_url + a['href']
-                # check for duplicates
-                if link not in url_list:
-                    url_list.append(link)
+            href_child = div.find('a', href=True)
+            link = default_url + href_child['href']
+
+            # check for duplicates
+            if link not in link_data:
+                link_data.append(link)
+
+        for time_tag in soup.find_all('time', {'class': 'date'}):
+            date = time_tag.text
+
+            # check for duplicates
+            #if date not in date_data:
+            date_data.append(date)
+        
 
         if lastCount == lenOfPage:
             match = True
 
+    for i in range(len(link_data)):
+        tmp_ele = []
+        tmp_ele.append(link_data[i])
+        date_str = date_convert(date_data[i])
+        date_str.replace(',', '')
+        tmp_ele.append(date_str)
 
-    return url_list
+        #check if company_name in title/url 
+        if company_name in link_data[i]:
+            tmp_ele.append('True')
+        else:
+            tmp_ele.append('False')
+
+        url_triplet.append(tmp_ele)
+
+    return url_triplet
+
+
 
 
 #print(extract_text_from_url(url))
 
-url_list = urls_from_domain('AAPL')
-print(url_list)
-print(len(url_list))
+url_list = urls_from_domain('apple')
+
+with open('listfile.txt', 'w') as filehandle:
+    filehandle.truncate(0)
+    for listitem in url_list:
+        filehandle.write('%s , %s , %s\n' % (listitem[0], listitem[1], listitem[2]))
 
 
-print(extract_text_from_url(url_list[0]))
+#print(extract_text_from_url(url_list[0][0]))
