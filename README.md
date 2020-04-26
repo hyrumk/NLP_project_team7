@@ -1,19 +1,19 @@
-##Using the Virtual Python Env is Ideal##
+##Using the Virtual Python Env is Ideal
 
 
 INSTALLS:
 
-Numpy
+###Numpy
 pip install numpy
 v. 1.18.3 
 
-Pandas 
+###Pandas 
 pip install pandas
 v. 1.0.3
 
 
-Selenium - web crawling driver
+###Selenium - web crawling driver
 pip install selenium
 
-BeautifulSoup - html parser
+###BeautifulSoup - html parser
 pip install bs4
