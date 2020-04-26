@@ -1,19 +1,19 @@
-##Using the Virtual Python Env is Ideal
+# NLP Prject for CS372
+Use the virtual python env
 
 
-INSTALLS:
+## INSTALLS:
 
-###Numpy
-pip install numpy
-v. 1.18.3 
+### Numpy
+* pip install numpy
+* v. 1.18.3 
 
-###Pandas 
-pip install pandas
-v. 1.0.3
+### Pandas 
+* pip install pandas
+* v. 1.0.3
 
+### Selenium - web crawling driver
+* pip install selenium
 
-###Selenium - web crawling driver
-pip install selenium
-
-###BeautifulSoup - html parser
-pip install bs4
+### BeautifulSoup - html parser
+* pip install bs4
