@@ -6,6 +6,14 @@ import requests
 
 from nltk.tokenize import word_tokenize
 
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+import time
+
+
+# PIP INSTALLS: selenium, bs4
+
 url = 'http://www.prnewswire.com/news-releases/tata-consultancy-services-reports-broad-based-growth-across-markets-marks-steady-fy17-300440934.html'
 
 def extract_text_from_url(url):
@@ -77,41 +85,43 @@ def urls_from_domain(company_ticker, default_url='https://finance.yahoo.com/'):
     :return: [date, url] pair ?
     '''
     
-    #have to verify if company_ticker is valid.
+    #TODO: have to verify if company_ticker is valid.
     domain_frame = 'https://finance.yahoo.com/quote/{tag}/?p={tag}'.format(tag = company_ticker)
 
     #form a url list
     url_list = []
-    #mega-item-header-link
 
-    pause = 10
+    #scroll to bottom of url
+    driver = webdriver.Chrome()
+    driver.get(domain_frame)
 
+    # for some reason have to do manual scrolling for now ....
+    lenOfPage = driver.execute_script(
+        "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+    match = False
+    while(match == False):
+        lastCount = lenOfPage
+        time.sleep(10)
+        lenOfPage = driver.execute_script(
+            "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+        
 
-    driver = webdriver.PhantomJS(executable_path='phantomjs.exe')
-    driver.get("your_url")
-    #This code will scroll down to the end
-    while True:
-        try:
-            # Action scroll down
-            driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);")
-        break
-    except: 
-        pass
+        html = driver.page_source
 
+        soup = BeautifulSoup(html, 'html.parser')
 
+        for a in soup.find_all('a', href=True):
+            if a.has_attr('class') and 'mega-item-header-link' in a['class']:
+                #TODO: get time of the articles
 
+                link = default_url + a['href']
+                # check for duplicates
+                if link not in url_list:
+                    url_list.append(link)
 
-    
-    res = requests.get(domain_frame)
-    html = res.content
-    soup = BeautifulSoup(html, 'html.parser')
+        if lastCount == lenOfPage:
+            match = True
 
-
-    for a in soup.find_all('a', href=True):
-        if a.has_attr('class') and 'mega-item-header-link' in a['class']:
-            link = default_url + a['href']
-            url_list.append(link)
 
     return url_list
 
@@ -120,5 +130,7 @@ def urls_from_domain(company_ticker, default_url='https://finance.yahoo.com/'):
 
 url_list = urls_from_domain('AAPL')
 print(url_list)
+print(len(url_list))
 
-#print(extract_text_from_url(url_list[0]))
+
+print(extract_text_from_url(url_list[0]))
