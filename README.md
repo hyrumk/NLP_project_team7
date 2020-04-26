@@ -1,8 +1,13 @@
-# NLP Prject for CS372
-Use the virtual python env
+# NLP Project for CS372
+The following project aims at predicting the trend of the stock price for a certain
+company through Natural Language Processing of relevant web articles.
 
 
 ## INSTALLS:
+
+## Python Virtual Environment
+* pip install virtualenv
+* (Mac) source ./env/bin/activate 
 
 ### Numpy
 * pip install numpy
