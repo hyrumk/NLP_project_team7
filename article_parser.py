@@ -11,10 +11,35 @@ from selenium.webdriver.common.keys import Keys
 
 import time
 
-
 # PIP INSTALLS: selenium, bs4
 
-url = 'http://www.prnewswire.com/news-releases/tata-consultancy-services-reports-broad-based-growth-across-markets-marks-steady-fy17-300440934.html'
+
+import json
+
+class GimmeProxyAPI(object):
+	"""docstring for proxy"""
+	def __init__(self, **args):
+		self.base_url = "https://gimmeproxy.com/api/getProxy"
+		self.response = None
+
+		if self.response is None:
+			self.response = self.get_proxy(args=args)
+   
+	def get_proxy(self, **args):
+
+		request = requests.get(self.base_url, params=args)
+
+		if request.status_code == 200:
+			self.response = request.json()
+		else:
+			raise Exception("An unknown error occured, status_code = {}".format(request.status_code))
+
+		return self.response
+
+
+	def get_curl(self):
+		curl = self.response["curl"]
+		return curl
 
 def extract_text_from_url(url):
     '''
@@ -35,35 +60,19 @@ def extract_text_from_url(url):
     :param url: REQUIRED
     :return: group of texts extracted from url, delimtted by single space
     '''
-    # url = 'http://www.prnewswire.com/news-releases/tata-consultancy-services-reports-broad-based-growth-across-markets-marks-steady-fy17-300440934.html'
-    res = requests.get(url)
-    html = res.content
-    soup = BeautifulSoup(html, 'html.parser')
-
-    text = soup.find_all(text=True)
-
+    
+    headers = requests.utils.default_headers()
+    headers.update({
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
+    })
     output = ''
-    blacklist = [
-        '[document]',
-        'noscript',
-        'header',
-        'html',
-        'meta',
-        'head', 
-        'input',
-        'script',
-        'button',
-        'tr',
-        'table',
-        'td',
-        'style',
-        'footer'
-    ]
-
-    # t.parent.name gives parent html tag
-    for t in text:
-        if t.parent.name not in blacklist:
-            output += '{words} '.format(words = t)
+    res = requests.get(url, headers = headers)
+    soup = BeautifulSoup(res.content,"html.parser")
+            
+    headerDiv = soup.find('h1', {"class":"articleHeader"})
+    mainDiv = soup.find('div', {"class":"articlePage"})
+    output += headerDiv.text
+    output += mainDiv.text
 
 
     
@@ -180,12 +189,15 @@ def urls_from_domain(company_name, default_url='https://www.investing.com'):
 
 #print(extract_text_from_url(url))
 
-url_list = urls_from_domain('apple')
+''' url_list = urls_from_domain('apple')
 
 with open('listfile.txt', 'w') as filehandle:
     filehandle.truncate(0)
     for listitem in url_list:
-        filehandle.write('%s , %s , %s\n' % (listitem[0], listitem[1], listitem[2]))
+        filehandle.write('%s , %s , %s\n' % (listitem[0], listitem[1], listitem[2])) '''
 
 
 #print(extract_text_from_url(url_list[0][0]))
+
+test = 'https://www.investing.com/news/economy/top-5-things-to-know-in-the-market-on-tuesday-april-28th-2153037'
+print(extract_text_from_url(test))
