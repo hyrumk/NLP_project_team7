@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 
+
 def stock_price_data(company_ticker, start_date = 'start', end_date = 'end', price_type = 'Open'):
     '''
     Gives the stock data of a given company in chronological order.
@@ -67,7 +68,7 @@ def stock_price_interval(company_ticker, interval, start_date = 'start', end_dat
 
 
 
-def stock_price_label(company_ticker, interval, percentage_rate = 3,
+def stock_price_label(company_ticker, interval = 1, percentage_rate = 3,
                       start_date = 'start', end_date = 'end', price_type = 'Open'):
     '''
     Returns the label to feed as an input for a classifier.

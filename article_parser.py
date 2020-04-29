@@ -8,7 +8,7 @@ from nltk.tokenize import word_tokenize
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+import string
 import time
 
 # PIP INSTALLS: selenium, bs4
@@ -186,18 +186,20 @@ def urls_from_domain(company_name, default_url='https://www.investing.com'):
 
 
 
+def urls_search_by_keyword(keyword):
+    '''
+    Makes a text file with a list of urls of a given keyword.
 
-#print(extract_text_from_url(url))
+    :param keyword: keyword string
+    :return: None
+    '''
 
-''' url_list = urls_from_domain('apple')
+    url_list = urls_from_domain(keyword)
+    keyword_name = keyword.translate({ord(c): None for c in string.whitespace})
+    txt_file_name = './Data Storage/listfile_{}.txt'.format(keyword_name.lower())
+    with open(txt_file_name, 'w') as filehandle:
+        filehandle.truncate(0)
+        for listitem in url_list:
+            filehandle.write('%s , %s , %s\n' % (listitem[0], listitem[1], listitem[2]))
 
-with open('listfile.txt', 'w') as filehandle:
-    filehandle.truncate(0)
-    for listitem in url_list:
-        filehandle.write('%s , %s , %s\n' % (listitem[0], listitem[1], listitem[2])) '''
 
-
-#print(extract_text_from_url(url_list[0][0]))
-
-test = 'https://www.investing.com/news/economy/top-5-things-to-know-in-the-market-on-tuesday-april-28th-2153037'
-print(extract_text_from_url(test))
