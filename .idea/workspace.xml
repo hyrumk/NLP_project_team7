@@ -21,7 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="daa68624-306f-4906-8d91-4d6ceb475b48" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/article_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/article_parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_collector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_processing.py" afterDir="false" />
@@ -51,7 +50,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.data_collector">
+  <component name="RunManager" selected="Python.text_processing">
     <configuration name="article_parser" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="NLP_Project_Team7" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -138,8 +137,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.data_collector" />
         <item itemvalue="Python.text_processing" />
+        <item itemvalue="Python.data_collector" />
         <item itemvalue="Python.stock_data" />
         <item itemvalue="Python.article_parser" />
       </list>
@@ -171,22 +170,22 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="223" key="GridCell.Tab.0.bottom" timestamp="1589020323731">
+    <state width="1899" height="223" key="GridCell.Tab.0.bottom" timestamp="1589042739246">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589020323731" />
-    <state width="1899" height="223" key="GridCell.Tab.0.center" timestamp="1589020323730">
+    <state width="1899" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739246" />
+    <state width="1899" height="223" key="GridCell.Tab.0.center" timestamp="1589042739245">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589020323730" />
-    <state width="1899" height="223" key="GridCell.Tab.0.left" timestamp="1589020323730">
+    <state width="1899" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739245" />
+    <state width="1899" height="223" key="GridCell.Tab.0.left" timestamp="1589042739245">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589020323730" />
-    <state width="1899" height="223" key="GridCell.Tab.0.right" timestamp="1589020323731">
+    <state width="1899" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739245" />
+    <state width="1899" height="223" key="GridCell.Tab.0.right" timestamp="1589042739246">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589020323731" />
+    <state width="1899" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739246" />
     <state x="461" y="164" key="SettingsEditor" timestamp="1588849339124">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -132,6 +132,62 @@ def check_date_range(series_data):
 
 
 
+def newsnumber_by_date(keyword):
+    series_index = []
+    series_numbernews = []
+    modified_keyword = keyword.translate({ord(c): None for c in string.whitespace}).lower()
+    txt_file = './Data Storage/listfile_{}.txt'.format(modified_keyword)
+    file_exists = os.path.exists(txt_file)
+    if not file_exists:
+        urls_search_by_keyword(keyword)
+    f = open(txt_file, 'rt')
+    text = f.readlines()
+    for line in text:
+        url_triplet = [element.strip() for element in list(line.split(', ')) if element != '']
+        time_list = url_triplet[1].split('-')
+        time = dt.datetime(int(time_list[0]), int(time_list[1]), int(time_list[2]))
+        if time in series_index:
+            ind = series_index.index(time)
+            series_numbernews[ind] += 1  # + 'NEXTTEXT'
+        else:
+            series_index.append(time)
+            series_numbernews.append(1)
+    f.close()
+    numbernews_series = pd.Series(series_numbernews, index = series_index).sort_index()
+    return numbernews_series
+
+
+def merge_price_newsnumber(newsnumber_data, label_data):
+    date_index = [label_data.index[0]]
+
+    first_number = 0
+    text_index = 0
+    for date in newsnumber_data.index:
+        if date <= label_data.index[0]:
+            first_number += newsnumber_data[date]
+            text_index += 1
+        else:
+            break
+    data = [(first_number, label_data[0])]
+
+    for date in label_data.index[1:]:
+        text_to_add = 0
+        label = label_data[date]
+        while text_index != len(newsnumber_data) and newsnumber_data.index[text_index] <= date:
+            text_to_add += newsnumber_data[text_index]
+            text_index += 1
+
+        if (text_to_add != 0):
+            date_index.append(date)
+            data.append((text_to_add, label_data[date]))
+        else:
+            continue
+
+    return pd.Series(data, index=date_index)
+
+
+
+
 def merge_price_text(text_data, label_data):
     '''
     Merges text and label data to create.
@@ -224,5 +280,5 @@ label_series.to_pickle("./Data Storage/label_{}.pkl".format(COMPANY_TICKER_INPUT
 #txt_series = text_from_url_list(KEYWORD_INPUT)
 #store_data(txt_series, 'apple', 'keyword')
 #txt_series.to_pickle("./Data Storage/keyword_{}.pkl".format(KEYWORD_INPUT.lower()))
-txt= text_from_url_list('Nasdaq')
-store_data('keyword', 'Nasdaq')
+#txt= text_from_url_list('Nasdaq')
+#store_data('keyword', 'Nasdaq')

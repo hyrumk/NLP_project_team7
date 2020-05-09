@@ -188,7 +188,8 @@ def market_stock_growth_interval(company_ticker, market, interval = 1,
     stock_data = stock_price_interval(company_ticker, interval, start_date, end_date, price_type)
 
     date = [stock_data.index[i] for i, price in enumerate(stock_data[:-1])]
-    rate = [(stock_data[i + 1]/price - market_data[i + 1]/market_data[i])*100 for i, price in enumerate(stock_data[:-1])]
+    rate = [(stock_data[i+1]/price - 1) * 100 for i, price in enumerate(stock_data[:-1])]
+    #rate = [(stock_data[i + 1]/price - market_data[i + 1]/market_data[i])*100 for i, price in enumerate(stock_data[:-1])]
 
     rate_data = pd.Series(rate, index = date)
 
