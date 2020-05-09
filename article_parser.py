@@ -197,9 +197,12 @@ def urls_search_by_keyword(keyword):
     url_list = urls_from_domain(keyword)
     keyword_name = keyword.translate({ord(c): None for c in string.whitespace})
     txt_file_name = './Data Storage/listfile_{}.txt'.format(keyword_name.lower())
-    with open(txt_file_name, 'w') as filehandle:
+    with open(txt_file_name, 'w', encoding= 'utf-8') as filehandle:
         filehandle.truncate(0)
         for listitem in url_list:
             filehandle.write('%s , %s , %s\n' % (listitem[0], listitem[1], listitem[2]))
+
+
+#urls_search_by_keyword('Nasdaq')
 
 

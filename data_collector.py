@@ -28,12 +28,13 @@ START_DATE           = '2010-01-01'
 
 
 # 혹시라도 f.readlines()에서 문제 생기면 f = open의 3rd parameter -> encoding = 'UTF-8' 추가
-def text_from_url_list(keyword):
+def text_from_url_list(keyword, in_title = False):
     '''
     Receives the url to make a text data in pandas.Series format.
     If a listfile of a given keyword doesn't exist, it will create a new one.
 
     :param keyword: keyword string
+    :param in_title: if True, only take news with keyword in the title
     :return: a text data with datatime index (pandas.Series)
             (index: datatime, element: list of texts)
             'NEXTTEXT' in the text data indicates that it's the boundary between different articles
@@ -46,7 +47,7 @@ def text_from_url_list(keyword):
     file_exists = os.path.exists(txt_file)
     if not file_exists:
         urls_search_by_keyword(keyword)
-    f = open(txt_file, 'rt')
+    f = open(txt_file, 'rt', encoding = 'UTF-8')
     text = f.readlines()
     for line in text:
         text_data = ''
@@ -57,15 +58,68 @@ def text_from_url_list(keyword):
             continue
         time_list = url_triplet[1].split('-')
         time = dt.datetime(int(time_list[0]), int(time_list[1]), int(time_list[2]))
-        if time in series_index:
-            ind = series_index.index(time)
-            series_text[ind] += ['NEXTTEXT'] + text_data
+        if in_title and url_triplet[2] == 'True':
+            if time in series_index:
+                ind = series_index.index(time)
+                series_text[ind] += text_data # + 'NEXTTEXT'
+            else:
+                series_index.append(time)
+                series_text.append(text_data)
+        elif in_title and url_triplet[2] != 'True':
+            continue
         else:
-            series_index.append(time)
-            series_text.append(text_data)
+            if time in series_index:
+                ind = series_index.index(time)
+                series_text[ind] += text_data # + 'NEXTTEXT'
+            else:
+                series_index.append(time)
+                series_text.append(text_data)
     f.close()
     text_series = pd.Series(series_text, index = series_index).sort_index()
     return text_series
+
+
+def title_from_url_list(keyword):
+    '''
+    receives titles from the news with a title that include the given keyword.
+
+    :param keyword: keyword string
+    :return: a title data with datatime index (pandas.Series)
+            (index: datatime, element: list of texts)
+    '''
+    series_index = []
+    series_title = []
+    modified_keyword = keyword.translate({ord(c): None for c in string.whitespace}).lower()
+    txt_file = './Data Storage/listfile_{}.txt'.format(modified_keyword)
+    file_exists = os.path.exists(txt_file)
+    if not file_exists:
+        urls_search_by_keyword(keyword)
+    f = open(txt_file, 'rt')
+    text = f.readlines()
+    for line in text:
+        text_data = ''
+        url_triplet = [element.strip() for element in list(line.split(', ')) if element != '']
+        if url_triplet[2] == 'True':
+            url = url_triplet[0]
+            title = url.split('/')[-1].split('-')
+            if str.isdecimal(title[-1]):
+                del title[-1]
+            text_data = title
+            time_list = url_triplet[1].split('-')
+            time = dt.datetime(int(time_list[0]), int(time_list[1]), int(time_list[2]))
+            if time in series_index:
+                ind = series_index.index(time)
+                series_title[ind] += text_data # + 'NEXTTEXT'
+            else:
+                series_index.append(time)
+                series_title.append(text_data)
+        else:
+            continue
+    f.close()
+
+    title_series = pd.Series(series_title, index = series_index).sort_index()
+    return title_series
+
 
 
 def check_date_range(series_data):
@@ -111,7 +165,7 @@ def merge_price_text(text_data, label_data):
         else: continue
 
     return pd.Series(data, index = date_index)
-
+####MODIFY above return when needed!####
 
 
 def store_data(series_data, title, data_type = 'price'):
@@ -168,4 +222,7 @@ label_series.to_pickle("./Data Storage/label_{}.pkl".format(COMPANY_TICKER_INPUT
 '''
 
 #txt_series = text_from_url_list(KEYWORD_INPUT)
+#store_data(txt_series, 'apple', 'keyword')
 #txt_series.to_pickle("./Data Storage/keyword_{}.pkl".format(KEYWORD_INPUT.lower()))
+txt= text_from_url_list('Nasdaq')
+store_data('keyword', 'Nasdaq')
