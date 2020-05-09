@@ -181,6 +181,7 @@ for i in range(len(test)):
 
 print('accuracy:', nltk.classify.accuracy(classifier, test_set))
 
+'''
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
@@ -200,4 +201,4 @@ ax.set_ylim3d(0, 1)
 ax.set_zlim3d(0, 1)
 ax.scatter(x, y, z)
 plt.show()
-
+'''
