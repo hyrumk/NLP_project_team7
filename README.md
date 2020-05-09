@@ -22,3 +22,7 @@ company through Natural Language Processing of relevant web articles.
 
 #### BeautifulSoup - html parser
 * pip install bs4
+
+#### lxml
+* pip install lxml
+* v. 4.5.0
