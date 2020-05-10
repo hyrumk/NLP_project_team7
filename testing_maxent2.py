@@ -78,8 +78,6 @@ inputs = data_collector.merge_price_text(text, label).values
 nlz_inputs = [([word for word in normalizing(words)], tuple(label))
               for (words, label) in inputs]
 inputs = [(words, tuple(label)) for (words, label) in inputs]
-random.shuffle(nlz_inputs)
-random.shuffle(inputs)
 all_words = list(itertools.chain(*[words for (words, _) in nlz_inputs]))
 fd = FreqDist(all_words)
 word_features = [word for (word, _) in fd.most_common(2000)]
@@ -172,21 +170,11 @@ text_processing.featureset example:
 #3 features = features_ratio_of_num_sents
 #3 featuresets = [(features(words), label) for (words, label) in inputs]
 
+random.shuffle(featuresets)
+slicing_point = int(len(featuresets) * 0.1)
 
-train_set, test_set = featuresets[:40], featuresets[40:]
+train_set, test_set = featuresets[slicing_point:], featuresets[:slicing_point]
 
-# features in text_processing:
-# train_set : test_set = 1 : 4.76 => time: 0.05s, accuracy: 0.60
-# train_set : test_set = 1 : 6.7 => time: 0.04s, accuracy: 0.67
-# train_set : test_set = 1 : 10.55 => time: 0.03s, accuracy: 0.68 
-# features_ratio:
-# train_set : test_set = 1 : 4.76 => time: 8.51s, accuracy: 0.71
-# train_set : test_set = 1 : 6.7 => time: 7.43s, accuracy: 0.71
-# train_set : test_set = 1 : 10.55 => time: 5.33s, accuracy: 0.71
-# features_ratio_of_num_sents
-# train_set : test_set = 1 : 4.76 => time: 7.25s, accuracy: 0.71
-# train_set : test_set = 1 : 6.7 => time: 5.3s, accuracy: 0.69
-# train_set : test_set = 1 : 10.55 => time: 3.5s, accuracy: 0.72
 start = time.time()
 classifier = maxent.MaxentClassifier.train(train_set, 'gis', max_iter=10,
                                            trace=1)
