@@ -36,7 +36,7 @@ def normalizing(words):
     
     Process of normalizing:
     1. Remove stopwords and make words lower.
-    2. Combine numbers with specific symbols($, %).
+    2. Combine numbers with particular symbols($, %).
         e.g. 1.98, % -> 1.98%    $, 543.27m -> $543.27m
     3. Remove words whose length equals to one.
 
@@ -55,7 +55,6 @@ def normalizing(words):
     for i in range(len(nlz_words)):
         if c:
             c = 0
-            pass
         elif i==len(nlz_words)-1:
             nlz_words2.append(nlz_words[i])
         elif nlz_words[i]=='$' and is_num(nlz_words[i+1]):
@@ -78,7 +77,7 @@ label = stock_data.stock_price_label('AAPL', 14, 5)
 inputs = data_collector.merge_price_text(text, label).values
 nlz_inputs = [([word for word in normalizing(words)], tuple(label))
               for (words, label) in inputs]
-random.shuffle(nlz_inputs)
+inputs = [(words, tuple(label)) for (words, label) in inputs]
 all_words = list(itertools.chain(*[words for (words, _) in nlz_inputs]))
 fd = FreqDist(all_words)
 word_features = [word for (word, _) in fd.most_common(2000)]
@@ -125,7 +124,37 @@ def features_ratio(words):
             pass
     return features 
 
-# 아래 주석 1, 2 중 원하는 거 하나 지워주세요
+def combine_symbol(sent):
+    result = ''
+    c = 0
+    for i in range(len(sent)):
+        if c:
+            c = 0
+        elif i==len(sent)-1:
+            result += sent[i]
+        elif sent[i]=='$':
+            result += sent[i]
+            c = 1
+        elif sent[i+1]=='%':
+            pass
+        else:
+            result += sent[i]
+    return result
+
+def features_ratio_of_num_sents(words):
+    sents = nltk.sent_tokenize(' '.join(words))
+    sents = [combine_symbol(sent) for sent in sents]
+    nlz_words = normalizing(words)
+    num_words = {word for word in nlz_words if word.startswith('$') or
+                 word.endswith('%')}
+    num_sents = list({sent for sent in sents for num in num_words
+                      if num in sent})
+    new_words = nltk.word_tokenize(' '.join(num_sents))
+    new_nlz_words = normalizing(new_words)
+    return features_ratio(new_nlz_words)
+    
+
+# 아래 주석 1, 2, 3 중 원하는 거 하나 지워주세요
 
 #1 featuresets = text_processing.featureset
 '''
@@ -138,16 +167,14 @@ text_processing.featureset example:
 #2 features = features_ratio
 #2 featuresets = [(features(words), label) for (words, label) in nlz_inputs]
 
-train_set, test_set = featuresets[:20], featuresets[20:]
+#3 features = features_ratio_of_num_sents
+#3 featuresets = [(features(words), label) for (words, label) in inputs]
 
-# features in text_processing:
-# train_set : test_set = 1 : 4.76 => time: 0.05s, accuracy: 0.60
-# train_set : test_set = 1 : 6.7 => time: 0.04s, accuracy: 0.67
-# train_set : test_set = 1 : 10.55 => time: 0.03s, accuracy: 0.68 
-# features_ratio:
-# train_set : test_set = 1 : 4.76 => time: 8.51s, accuracy: 0.71
-# train_set : test_set = 1 : 6.7 => time: 7.43s, accuracy: 0.71
-# train_set : test_set = 1 : 10.55 => time: 5.33s, accuracy: 0.71
+random.shuffle(featuresets)
+slicing_point = int(len(featuresets) * 0.1)
+
+train_set, test_set = featuresets[slicing_point:], featuresets[:slicing_point]
+
 start = time.time()
 classifier = maxent.MaxentClassifier.train(train_set, 'gis', max_iter=10,
                                            trace=1)
@@ -181,7 +208,7 @@ for i in range(len(test)):
 
 print('accuracy:', nltk.classify.accuracy(classifier, test_set))
 
-'''
+
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
@@ -201,4 +228,3 @@ ax.set_ylim3d(0, 1)
 ax.set_zlim3d(0, 1)
 ax.scatter(x, y, z)
 plt.show()
-'''
