@@ -21,8 +21,10 @@
   <component name="ChangeListManager">
     <list default="true" id="daa68624-306f-4906-8d91-4d6ceb475b48" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Storage/keyword_apple.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/Data Storage/keyword_apple.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/article_parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testing_maxent2.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing_maxent2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_processing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -114,6 +116,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="testing_maxent2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="NLP_Project_Team7" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testing_maxent2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="text_processing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="NLP_Project_Team7" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -139,6 +162,7 @@
       <list>
         <item itemvalue="Python.text_processing" />
         <item itemvalue="Python.data_collector" />
+        <item itemvalue="Python.testing_maxent2" />
         <item itemvalue="Python.stock_data" />
         <item itemvalue="Python.article_parser" />
       </list>
@@ -170,22 +194,22 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="223" key="GridCell.Tab.0.bottom" timestamp="1589042739246">
+    <state width="1899" height="223" key="GridCell.Tab.0.bottom" timestamp="1589725273119">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739246" />
-    <state width="1899" height="223" key="GridCell.Tab.0.center" timestamp="1589042739245">
+    <state width="1899" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589725273119" />
+    <state width="1899" height="223" key="GridCell.Tab.0.center" timestamp="1589725273119">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739245" />
-    <state width="1899" height="223" key="GridCell.Tab.0.left" timestamp="1589042739245">
+    <state width="1899" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589725273119" />
+    <state width="1899" height="223" key="GridCell.Tab.0.left" timestamp="1589725273119">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739245" />
-    <state width="1899" height="223" key="GridCell.Tab.0.right" timestamp="1589042739246">
+    <state width="1899" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589725273119" />
+    <state width="1899" height="223" key="GridCell.Tab.0.right" timestamp="1589725273119">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589042739246" />
+    <state width="1899" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589725273119" />
     <state x="461" y="164" key="SettingsEditor" timestamp="1588849339124">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

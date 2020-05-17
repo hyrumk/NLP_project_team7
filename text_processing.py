@@ -9,11 +9,13 @@ import random
 import matplotlib.pyplot as plt
 
 text = data_collector.load_data('apple', 'keyword')
+#for txt in text:
+#    print(len(txt.split('NEXTTEXT')))
 #text = data_collector.title_from_url_list('apple')
 
 
 #label = data_collector.load_data('AAPL', 'label')
-label = stock_data.stock_price_label('AAPL', 14, 5) #'AAPL',14,5
+label = stock_data.stock_price_label_binary('AAPL', 10) #'AAPL',14,5
 #label = stock_data.stock_price_label_binary('AAPL', 7, '2010-01-01')
 #label = stock_data.market_stock_label_binary('AAPL', 'IXIC', 7 , '2010-01-01')
 
@@ -118,7 +120,7 @@ def feature_vs_growth_rate(feature_set):
 
 
 
-
+'''
 ## Featureset이 주가의 경향성을 어떻게 반영하는지
 
 x1, x2, x3, x4, x5, y = featureset_plotdata(featureset)
@@ -151,10 +153,11 @@ plt.title('word related to decrease')
 plt.scatter(x5, y)
 plt.ylabel('increase or decrease')
 
-'''
+
 plt.subplot(1,6,6)
 plt.title('Number of news')
 plt.scatter(x6, y)
 plt.ylabel('increase or decrease')
-'''
+
 plt.show()
+'''

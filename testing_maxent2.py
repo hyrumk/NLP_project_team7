@@ -74,7 +74,10 @@ def normalizing(words):
     return nlz_words3
 
 text = data_collector.load_data('apple', 'keyword')
-label = stock_data.stock_price_label('AAPL', 14, 5)
+label = stock_data.stock_price_label_binary('AAPL', 10)
+
+
+
 inputs = data_collector.merge_price_text(text, label).values
 nlz_inputs = [([word for word in normalizing(words)], tuple(label))
               for (words, label) in inputs]
@@ -125,9 +128,10 @@ def features_ratio(words):
             pass
     return features 
 
+
 # 아래 주석 1, 2 중 원하는 거 하나 지워주세요
 
-#1 featuresets = text_processing.featureset
+featuresets = text_processing.featureset
 '''
 text_processing.featureset example:
 [({'mentioned vs not mentioned': 4.47, 'company mentioned polarity scores': 0.24,
@@ -138,7 +142,11 @@ text_processing.featureset example:
 #2 features = features_ratio
 #2 featuresets = [(features(words), label) for (words, label) in nlz_inputs]
 
-train_set, test_set = featuresets[:20], featuresets[20:]
+random.shuffle(featuresets)
+slicing_point = int(len(featuresets) * 0.1)
+print(len(featuresets))
+train_set, test_set = featuresets[slicing_point:], featuresets[:slicing_point]
+
 
 # features in text_processing:
 # train_set : test_set = 1 : 4.76 => time: 0.05s, accuracy: 0.60

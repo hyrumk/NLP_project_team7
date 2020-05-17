@@ -47,7 +47,7 @@ def text_from_url_list(keyword, in_title = False):
     file_exists = os.path.exists(txt_file)
     if not file_exists:
         urls_search_by_keyword(keyword)
-    f = open(txt_file, 'rt', encoding = 'UTF-8')
+    f = open(txt_file, 'rt')
     text = f.readlines()
     for line in text:
         text_data = ''
@@ -61,7 +61,7 @@ def text_from_url_list(keyword, in_title = False):
         if in_title and url_triplet[2] == 'True':
             if time in series_index:
                 ind = series_index.index(time)
-                series_text[ind] += text_data # + 'NEXTTEXT'
+                series_text[ind] += text_data + ' NEXTTEXT ' #
             else:
                 series_index.append(time)
                 series_text.append(text_data)
@@ -70,7 +70,7 @@ def text_from_url_list(keyword, in_title = False):
         else:
             if time in series_index:
                 ind = series_index.index(time)
-                series_text[ind] += text_data # + 'NEXTTEXT'
+                series_text[ind] += text_data + ' NEXTTEXT ' #
             else:
                 series_index.append(time)
                 series_text.append(text_data)
@@ -282,3 +282,6 @@ label_series.to_pickle("./Data Storage/label_{}.pkl".format(COMPANY_TICKER_INPUT
 #txt_series.to_pickle("./Data Storage/keyword_{}.pkl".format(KEYWORD_INPUT.lower()))
 #txt= text_from_url_list('Nasdaq')
 #store_data('keyword', 'Nasdaq')
+
+#txt_series = text_from_url_list(KEYWORD_INPUT)
+#store_data(txt_series, KEYWORD_INPUT, 'keyword')
