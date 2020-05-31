@@ -20,8 +20,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="daa68624-306f-4906-8d91-4d6ceb475b48" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testing_maxent2.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing_maxent2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NLP_Project_Team7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_Project_Team7/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NLP_Project_Team7/data_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_Project_Team7/data_collector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NLP_Project_Team7/news.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_Project_Team7/news.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NLP_Project_Team7/text_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_Project_Team7/text_processing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
