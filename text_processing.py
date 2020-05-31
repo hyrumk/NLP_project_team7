@@ -8,7 +8,26 @@ from nltk.tokenize import sent_tokenize
 import random
 import matplotlib.pyplot as plt
 
-text = data_collector.load_data('apple', 'keyword')
+text = data_collector.load_data('apple_mod', 'keyword')
+
+for t in text:
+    print(len(t))
+    print(t)
+
+'''
+date = []
+text_list = []
+for i,news in enumerate(text):
+    total_news = ' '.join(news)
+    mod_news = total_news.split('NEXTTEXT')
+    text_list.append(mod_news)
+    date.append(text.index[i])
+    print(mod_news)
+
+new_form = pd.Series(text_list, index = date)
+data_collector.store_data(new_form,'apple_mod',data_type= 'keyword')
+print('done!')
+'''
 #for txt in text:
 #    print(len(txt.split('NEXTTEXT')))
 #text = data_collector.title_from_url_list('apple')
