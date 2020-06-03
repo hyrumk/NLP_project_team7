@@ -56,24 +56,25 @@ def text_from_url_list(keyword, in_title = False):
             text_data = extract_text_from_url(url_triplet[0])
         except:
             continue
+        text_data = ' '.join(text_data)
         time_list = url_triplet[1].split('-')
         time = dt.datetime(int(time_list[0]), int(time_list[1]), int(time_list[2]))
         if in_title and url_triplet[2] == 'True':
             if time in series_index:
                 ind = series_index.index(time)
-                series_text[ind] += text_data + ' NEXTTEXT ' #
+                series_text[ind].append(text_data) # + ' NEXTTEXT ' #
             else:
                 series_index.append(time)
-                series_text.append(text_data)
+                series_text.append([text_data])
         elif in_title and url_triplet[2] != 'True':
             continue
         else:
             if time in series_index:
                 ind = series_index.index(time)
-                series_text[ind] += text_data + ' NEXTTEXT ' #
+                series_text[ind].append(text_data) #+ ' NEXTTEXT ' #
             else:
                 series_index.append(time)
-                series_text.append(text_data)
+                series_text.append([text_data])
     f.close()
     text_series = pd.Series(series_text, index = series_index).sort_index()
     return text_series
@@ -121,6 +122,37 @@ def title_from_url_list(keyword):
     return title_series
 
 
+def relevant_news_from_url_list(keyword, relevance_keyword = 'technology'): # technology section
+    series_index = []
+    series_text = []
+    modified_keyword = keyword.translate({ord(c): None for c in string.whitespace}).lower()
+    txt_file = './Data Storage/listfile_{}.txt'.format(modified_keyword)
+    file_exists = os.path.exists(txt_file)
+    if not file_exists:
+        urls_search_by_keyword(keyword)
+    f = open(txt_file, 'rt')
+    text = f.readlines()
+    for line in text:
+        text_data = ''
+        url_triplet = [element.strip() for element in list(line.split(', ')) if element != '']
+        if relevance_keyword in url_triplet[0]:
+            try:
+                text_data = extract_text_from_url(url_triplet[0])
+            except:
+                continue
+        else:
+            continue
+        time_list = url_triplet[1].split('-')
+        time = dt.datetime(int(time_list[0]), int(time_list[1]), int(time_list[2]))
+        if time in series_index:
+            ind = series_index.index(time)
+            series_text[ind].append(text_data) #+ ' NEXTTEXT ' #
+        else:
+            series_index.append(time)
+            series_text.append([text_data])
+    f.close()
+    text_series = pd.Series(series_text, index = series_index).sort_index()
+    return text_series
 
 def check_date_range(series_data):
     '''
