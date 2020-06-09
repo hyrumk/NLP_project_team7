@@ -63,7 +63,8 @@ for i, label in enumerate(gold):
 '''
 ratio of %
 
-mean of total = 0.02545 - 0.02569
+mean of total(random 100 picks) = 0.02545
+(for all 2188 articles - 0.02569)
 
 number of related = 91
 mean of related = 0.02750
@@ -133,6 +134,7 @@ for i in not_related:
 existence of keywords in title
 
 mean of total = 0.74
+(for all 2188 articles - 0.7308)
 
 number of related = 91
 mean of related = 0.8132
@@ -144,6 +146,7 @@ mean of not_related = 0.0
 ratio of keywords in article
 
 mean of total = 0.03027
+(for all 2188 articles - 0.02945)
 
 number of related = 91
 mean of related = 0.03219
@@ -184,6 +187,7 @@ for i in not_related:
 ratio of keyverbs in article
 
 mean of total = 0.05686
+(for all 2188 articles - 0.05666)
 
 number of related = 91
 mean of related = 0.06093
