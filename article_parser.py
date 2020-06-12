@@ -76,8 +76,8 @@ def extract_text_from_url(url):
 
 
     
-    token_list = word_tokenize(output)
-
+    # token_list = word_tokenize(output)
+    token_list = output
     return token_list
 
 

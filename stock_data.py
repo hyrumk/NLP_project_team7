@@ -107,6 +107,7 @@ def stock_price_label(company_ticker, interval = 1, percentage_rate = 3,
 
     :param company_ticker: refer to stock_price_interval()
     :param interval: refer to stock_price_interval()
+    :param percentage_rate: the percentage threshold to consider as increase/decrease
     :param start_date: refer to stock_price_interval()
     :param end_date: refer to stock_price_interval()
     :param price_type:
@@ -130,6 +131,67 @@ def stock_price_label(company_ticker, interval = 1, percentage_rate = 3,
 
     labeled_data = pd.Series(data_label, index = data_index)
     return labeled_data
+
+
+def stock_price_label2(company_ticker, interval = 1, consecutive = 3,
+                      start_date = 'start', end_date = 'end', price_type = 'Open'):
+    '''
+    2nd way of labeling the price. Labels based on the consecutive trend of the price.
+
+    e.g. when interval = 2 & consecutive = 3,
+    [1,0,0] when stock 'Open' price increased for 3 * '2' days in a row.
+    [0,0,1] when stock 'Open' price decreased for 3 * '2' days in a row.
+    [0,1,0] else.
+
+    :param company_ticker: refer to stock_price_interval()
+    :param interval: refer to stock_price_interval()
+    :param consecutive: the consecutive ticks to be considered an increase/decrease
+    :param start_date: refer to stock_price_interval()
+    :param end_date: refer to stock_price_interval()
+    :param price_type:
+    :return: labeled data in pandas series (index: Timestamp, element: list)
+    '''
+    stock_price_data = stock_price_interval(company_ticker, interval, start_date, end_date, price_type)
+    data_index = []
+    data_label = []
+    for i, price in enumerate(stock_price_data[:-consecutive]):
+        date = stock_price_data.index[i]
+        next_date = stock_price_data.index[i + 1]
+        data_index.append(date)
+        increase, decrease = 0, 0
+        if stock_price_data[i] < stock_price_data[i + 1]: # increase = 0 if next day price lower than the previous one even once
+            increase = 1
+            for j in range(consecutive):
+                if stock_price_data[i + j] > stock_price_data[i + j + 1]:
+                    increase = 0
+                    break
+        else: # decrease = 0 if next day price higher than the previous one even once
+            decrease = 1
+            for j in range(consecutive):
+                if stock_price_data[i + j] < stock_price_data[i + j + 1]:
+                    decrease = 0
+                    break
+        if increase == 1:
+            data_label.append([1,0,0])
+        elif decrease == 1:
+            data_label.append([0,0,1])
+        else:
+            data_label.append([0,1,0])
+
+    labeled_data = pd.Series(data_label, index = data_index)
+    return labeled_data
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -196,7 +258,7 @@ def market_stock_growth_interval(company_ticker, market, interval = 1,
     return rate_data
 
 
-def market_stock_label_binary(company_ticker, market, interval = 1, start_date = 'start',
+def stock_price_label_binary2(company_ticker, market, interval = 1, start_date = 'start',
                                             end_date = 'end', price_type = 'Open'):
     rate_list = market_stock_growth_interval(company_ticker, market, interval,
                                              start_date, end_date, price_type)

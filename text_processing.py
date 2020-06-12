@@ -4,18 +4,27 @@ import stock_data
 import nltk
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sia
-from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize, sent_tokenize
 import random
 import matplotlib.pyplot as plt
 
-text = data_collector.load_data('apple', 'keyword')
+# a list of news in a string form for each day.
+#text = data_collector.load_data('apple', 'keyword')
+text = data_collector.load_data('apple_technews', 'keyword')
+
+
+#for txt in text:
+#    if len(txt) > 1:
+#        print(txt)
 #text = data_collector.title_from_url_list('apple')
 
 
 #label = data_collector.load_data('AAPL', 'label')
-label = stock_data.stock_price_label('AAPL', 14, 5) #'AAPL',14,5
+#label = stock_data.stock_price_label('AAPL', interval = 1, percentage_rate = 1)
+#label = stock_data.stock_price_label_binary('AAPL', 10) #'AAPL',14,5
 #label = stock_data.stock_price_label_binary('AAPL', 7, '2010-01-01')
-#label = stock_data.market_stock_label_binary('AAPL', 'IXIC', 7 , '2010-01-01')
+label = stock_data.stock_price_label_binary2('AAPL', 'IXIC', 1 , '2010-01-01')
+#label = stock_data.stock_price_label2('AAPL', interval = 1, consecutive = 5)
 
 featurelist = ['mentioned vs not mentioned',        # 회사 언급된 문장 수 / 언급되지 않은 문장 수
                'company mentioned polarity scores', # 회사 언급된 문장의 polarity score 평균
@@ -42,15 +51,17 @@ def keyword_mentioned_sentence(txt, keyword):
 
 
 
-def featurizer(text, company_name):
+def featurizer(texts, company_name):
     '''
 
 
-    :param text: text in the form of a list of words
+    :param text: text in the form of a list of strings
     :param company_name: company name in string
     :return: featurized dictionary
     '''
-
+    text = []
+    for news in texts:
+        text += word_tokenize(news)
     company_name = company_name.lower()
     increase = ['increase', 'up', 'rise', 'jump', 'rose', 'high', 'beating', 'positive']
     decrease = ['decrease', 'down', 'fall', 'plunge','low', 'negative']
@@ -71,7 +82,7 @@ def featurizer(text, company_name):
     increase_related_freq = [fd[word] for word in increase]
     decrease_related_freq = [fd[word] for word in decrease]
 
-    feature['mentioned vs not mentioned'] = company_not_mentioned/company_mentioned
+    feature['mentioned vs not mentioned'] = 1#company_mentioned/company_not_mentioned
     feature['company mentioned polarity scores'] = sum(mentioned_sentence_scores) if len(mentioned_sentences) == 0\
                                                         else sum(mentioned_sentence_scores)/len(mentioned_sentences)
     feature['total polarity scores'] = float(sid.polarity_scores(' '.join(text))['compound'])
@@ -118,7 +129,6 @@ def feature_vs_growth_rate(feature_set):
 
 
 
-
 ## Featureset이 주가의 경향성을 어떻게 반영하는지
 
 x1, x2, x3, x4, x5, y = featureset_plotdata(featureset)
@@ -151,10 +161,27 @@ plt.title('word related to decrease')
 plt.scatter(x5, y)
 plt.ylabel('increase or decrease')
 
-'''
-plt.subplot(1,6,6)
-plt.title('Number of news')
-plt.scatter(x6, y)
-plt.ylabel('increase or decrease')
-'''
+
+#plt.subplot(1,6,6)
+#plt.title('Number of news')
+#plt.scatter(x6, y)
+#plt.ylabel('increase or decrease')
+
 plt.show()
+
+
+
+
+##################################################################################################
+def find_keyword(merged_data):
+    increase_keyword = []
+    decrease_keyword = []
+    maintain_keyword = []
+    for pair in merged_data:
+        newslist = pair[0]
+        label = pair[1]
+        total_news = []
+        for news in newslist:
+            single_news = word_tokenize(news)
+            total_news += single_news
+        nltk.FreqDist(total_news)
