@@ -265,11 +265,12 @@ def store_data(series_data, title, data_type = 'price'):
     :param data_type: 'price' stock_price_interval or stock_price_data from stock_data
                       'label' stock_price_label from stock_data
                     'keyword' from text_from_url_list from data_collector
+                    'gfkeyword' text found from Google_Find.py
     return: None
     '''
-    dtype = ['price', 'label', 'keyword']
+    dtype = ['price', 'label', 'keyword', 'gfkeyword']
     if data_type in dtype:
-        if data_type in dtype[:2]:
+        if data_type in dtype[:3]:
             title = title.upper()
         series_data.to_pickle("./Data Storage/{}_{}.pkl".format(data_type, title))
 
@@ -288,10 +289,10 @@ def load_data(title, data_type = 'price'):
     '''
     file_name = "./Data Storage/{}_{}.pkl".format(data_type, title)
     file_exists = os.path.exists(file_name)
-    dtype = ['price', 'label', 'keyword']
+    dtype = ['price', 'label', 'keyword', 'gfkeyword']
     loaded_data = None
     if data_type in dtype and file_exists:
-        if data_type in dtype[:2]:
+        if data_type in dtype[:3]:
             title = title.upper()
         loaded_data = pd.read_pickle(file_name)
     elif not data_type in dtype:
@@ -317,3 +318,38 @@ label_series.to_pickle("./Data Storage/label_{}.pkl".format(COMPANY_TICKER_INPUT
 
 #txt_series = text_from_url_list(KEYWORD_INPUT)
 #store_data(txt_series, KEYWORD_INPUT, 'keyword')
+
+def Google_Find_Text_Collect(title):
+    data = open('./Data Storage/{}.txt'.format(title), "r", encoding = 'utf8')
+
+    date_list = []
+    news_list = []
+    news_on_that_day = []
+    count = 0
+    for line in data:
+        if len(str.rstrip(line)) in [9,10]:
+            ymd = (line.strip()).split('-')
+            date = dt.datetime(int(ymd[0]), int(ymd[1]), int(ymd[2]))
+            date_list.append(date)
+            news_on_that_day = []
+        elif len(str.rstrip(line)) in [1,2]:
+            count = int(str.rstrip(line))
+            if count == 0:
+                news_list.append([])
+        else:
+            news = line.strip()
+            news_on_that_day.append(news)
+            count -= 1
+            if count == 0:
+                news_list.append(news_on_that_day)
+
+    while [] in news_list:
+        ind = news_list.index([])
+        del news_list[ind]
+        del date_list[ind]
+
+    return pd.Series(news_list, index = date_list).sort_index()
+
+
+#panda = Google_Find_Text_Collect('apples')
+#store_data(panda, 'apples', 'gfkeyword')
