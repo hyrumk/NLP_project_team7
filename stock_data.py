@@ -92,6 +92,42 @@ def stock_price_interval(company_ticker, interval, start_date = 'start', end_dat
     return filtered_data
 
 
+# For rate in relation to market average
+def market_stock_growth_interval(company_ticker, market, interval = 1,
+                                 start_date = 'start', end_date = 'end',
+                                                    price_type = 'Open'):
+    '''
+    A list of difference between price rate of the market and the company.
+    e.g. Apple price: 1 --> 1.5, NASDAQ index: 10 --> 12
+        Apple rate: 50%, NASDAQ rate: 20%
+        result = 50 - 20 = 30%
+
+
+    '''
+    market_data = stock_price_interval(market, interval, start_date, end_date, price_type)
+    stock_data = stock_price_interval(company_ticker, interval, start_date, end_date, price_type)
+
+    date = [stock_data.index[i] for i, price in enumerate(stock_data[:-1])]
+    rate = [(stock_data[i+1]/price - 1) * 100 for i, price in enumerate(stock_data[:-1])]
+    #rate = [(stock_data[i + 1]/price - market_data[i + 1]/market_data[i])*100 for i, price in enumerate(stock_data[:-1])]
+
+    rate_data = pd.Series(rate, index = date)
+
+    return rate_data
+
+'''
+Label Type
+
+
+stock_price_label : 상승/하락률이 특정 threshold를 넘어가는지에 따라 label 지정
+stock_price_label2 : x일 연속으로 상승/하락하는지에 따라 label 지정 (ex. 3일 연속 상승 --> [1,0,0])
+stock_price_label3 : 시장 지수 (market index) 와 비교해 상승/하락률이 특정 threshold를 넘어가는지에 따라 label 지정
+stock_price_label_binary : binary label ([1,0,0] & [0,0,1]) 단순 주가의 상승/하락에 따라 label 지정
+stock_price_label_binary2 : 시장 지수 (market index) 와 비교해 상승/하락에 따라 label 지정
+
+
+'''
+
 
 def stock_price_label(company_ticker, interval = 1, percentage_rate = 3,
                       start_date = 'start', end_date = 'end', price_type = 'Open'):
@@ -182,7 +218,22 @@ def stock_price_label2(company_ticker, interval = 1, consecutive = 3,
     return labeled_data
 
 
+def stock_price_label3(company_ticker, market, interval = 1, percentage_rate = 2, start_date = 'start',
+                                            end_date = 'end', price_type = 'Open'):
+    rate_list = market_stock_growth_interval(company_ticker, market, interval,
+                                             start_date, end_date, price_type)
+    data_index = [date for date in rate_list.index]
+    data_label = []
+    for rate in rate_list:
+        if rate >= percentage_rate:
+            data_label.append([1,0,0])
+        elif rate <= -percentage_rate:
+            data_label.append([0,0,1])
+        else:
+            data_label.append([0,1,0])
 
+    labeled_data = pd.Series(data_label, index = data_index)
+    return labeled_data
 
 
 
@@ -232,30 +283,6 @@ def stock_price_label_binary(company_ticker, interval = 1,
 
     labeled_data = pd.Series(data_label, index = data_index)
     return labeled_data
-
-
-# For rate in relation to market average
-def market_stock_growth_interval(company_ticker, market, interval = 1,
-                                 start_date = 'start', end_date = 'end',
-                                                    price_type = 'Open'):
-    '''
-    A list of difference between price rate of the market and the company.
-    e.g. Apple price: 1 --> 1.5, NASDAQ index: 10 --> 12
-        Apple rate: 50%, NASDAQ rate: 20%
-        result = 50 - 20 = 30%
-
-
-    '''
-    market_data = stock_price_interval(market, interval, start_date, end_date, price_type)
-    stock_data = stock_price_interval(company_ticker, interval, start_date, end_date, price_type)
-
-    date = [stock_data.index[i] for i, price in enumerate(stock_data[:-1])]
-    rate = [(stock_data[i+1]/price - 1) * 100 for i, price in enumerate(stock_data[:-1])]
-    #rate = [(stock_data[i + 1]/price - market_data[i + 1]/market_data[i])*100 for i, price in enumerate(stock_data[:-1])]
-
-    rate_data = pd.Series(rate, index = date)
-
-    return rate_data
 
 
 def stock_price_label_binary2(company_ticker, market, interval = 1, start_date = 'start',
