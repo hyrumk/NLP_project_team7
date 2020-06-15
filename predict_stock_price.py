@@ -109,12 +109,90 @@ if __name__=='__main__':
     print('training time:', time.time()-start)
     test = [feature for feature, _ in test_set]
     label = [label for _, label in test_set]
+    rise, maintain, fall = [], [], []
     for i in range(len(test)):
             pdist = classifier.prob_classify(test[i])
             guess = classifier.classify(test[i])
             gold = label[i]
+            if gold==(1, 0, 0):
+                rise.append((guess, pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1))))
+            elif gold==(0, 1, 0):
+                maintain.append((guess, pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1))))
+            if gold==(0, 0, 1):
+                fall.append((guess, pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1))))                
             print(pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1)), gold)
     print('accuracy:', nltk.classify.accuracy(classifier, test_set))
+    print()
+    print('rise')
+    for i in rise:
+        print(i)
+    print('fall')
+    for i in fall:
+        print(i)
+
+    import numpy
+    import matplotlib.pyplot as plt
+    company_polarity = [f['company mentioned polarity scores'] for f, l in feature_set]
+    company_polarityR = [f['company mentioned polarity scores'] for f, l in feature_set
+                         if l==(1, 0, 0)]
+    company_polarityM = [f['company mentioned polarity scores'] for f, l in feature_set
+                         if l==(0, 1, 0)]
+    company_polarityF = [f['company mentioned polarity scores'] for f, l in feature_set
+                         if l==(0, 0, 1)]
+    print('\ncompany mentioned polarity scores')
+    print('mean:', numpy.mean(company_polarityR), 'std:', numpy.std(company_polarityR), 'median:', numpy.median(company_polarityR))
+    print('mean:', numpy.mean(company_polarityM), 'std:', numpy.std(company_polarityM), 'median:', numpy.median(company_polarityM))
+    print('mean:', numpy.mean(company_polarityF), 'std:', numpy.std(company_polarityF), 'median:', numpy.median(company_polarityF))
+
+    total_polarity =  [f['total polarity scores'] for f, l in feature_set]
+    total_polarityR =  [f['total polarity scores'] for f, l in feature_set
+                       if l==(1, 0, 0)]
+    total_polarityM =  [f['total polarity scores'] for f, l in feature_set
+                       if l==(0, 1, 0)]
+    total_polarityF =  [f['total polarity scores'] for f, l in feature_set
+                       if l==(0, 0, 1)]
+    print('\ntotal polarity scores')
+    print('mean:', numpy.mean(total_polarityR), 'std:', numpy.std(total_polarityR), 'median:', numpy.median(total_polarityR))
+    print('mean:', numpy.mean(total_polarityM), 'std:', numpy.std(total_polarityM), 'median:', numpy.median(total_polarityM))
+    print('mean:', numpy.mean(total_polarityF), 'std:', numpy.std(total_polarityF), 'median:', numpy.median(total_polarityF))
+
+    increase = [f['word related to increase'] for f, l in feature_set]
+    increaseR = [f['word related to increase'] for f, l in feature_set
+                 if l==(1, 0, 0)]
+    increaseM = [f['word related to increase'] for f, l in feature_set
+                 if l==(0, 1, 0)]
+    increaseF = [f['word related to increase'] for f, l in feature_set
+                 if l==(0, 0, 1)]
+    print('\nword related to increase')
+    print('mean:', numpy.mean(increaseR), 'std:', numpy.std(increaseR), 'median:', numpy.median(increaseR))
+    print('mean:', numpy.mean(increaseM), 'std:', numpy.std(increaseM), 'median:', numpy.median(increaseM))
+    print('mean:', numpy.mean(increaseF), 'std:', numpy.std(increaseF), 'median:', numpy.median(increaseF))
+
+    decrease = [f['word related to decrease'] for f, l in feature_set]
+    decreaseR = [f['word related to decrease'] for f, l in feature_set
+                 if l==(1, 0, 0)]
+    decreaseM = [f['word related to decrease'] for f, l in feature_set
+                 if l==(0, 1, 0)]
+    decreaseF = [f['word related to decrease'] for f, l in feature_set
+                 if l==(0, 0, 1)]
+    print('\nword related to decrease')
+    print('mean:', numpy.mean(decreaseR), 'std:', numpy.std(decreaseR), 'median:', numpy.median(decreaseR))
+    print('mean:', numpy.mean(decreaseM), 'std:', numpy.std(decreaseM), 'median:', numpy.median(decreaseM))
+    print('mean:', numpy.mean(decreaseF), 'std:', numpy.std(decreaseF), 'median:', numpy.median(decreaseF))
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
