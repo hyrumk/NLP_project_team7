@@ -3,9 +3,11 @@ import time
 import random
 import pandas as pd
 import datetime as dt
+from collections import defaultdict
 
 import nltk
 from nltk.classify import maxent
+from nltk.metrics.scores import f_measure
 from nltk import word_tokenize, sent_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sia
 
@@ -14,7 +16,7 @@ import data_collector
 from text_processing import keyword_mentioned_sentence
 
 
-with open('amazon.txt', 'r', encoding='utf-8-sig') as f:
+with open('apples.txt', 'r', encoding='utf-8-sig') as f:
     new_data = f.readlines()
 
 new_index = []
@@ -49,7 +51,7 @@ for i, text in enumerate(new_text):
 new_text2 = [[article] for article in new_text2]
 
 new_text = pd.Series(new_text2, index=new_index2).sort_index()
-label = stock_data.stock_price_label3('AMZN', 'IXIC', 1, percentage_rate = 2, start_date = '2010-01-01')
+label = stock_data.stock_price_label3('AAPL', 'IXIC', 1, percentage_rate = 3, start_date = '2010-01-01')
 merged_data = data_collector.merge_price_text(new_text, label)
 
 def featurizer(texts, company_name='apple'):
@@ -97,7 +99,7 @@ def featurizer(texts, company_name='apple'):
     return feature
 
 
-feature_set = [(featurizer(article, company_name='amazon'), tuple(l)) for article, l in merged_data
+feature_set = [(featurizer(article, company_name='apple'), tuple(l)) for article, l in merged_data
                if article]
 
 if __name__=='__main__':
@@ -108,20 +110,28 @@ if __name__=='__main__':
     classifier = maxent.MaxentClassifier.train(train_set, 'gis')
     print('training time:', time.time()-start)
     test = [feature for feature, _ in test_set]
-    label = [label for _, label in test_set]
+    labels = [label for _, label in test_set]
+    refsets, testsets = defaultdict(set), defaultdict(set)
+    for i, (feats, label) in enumerate(test_set):
+        refsets[label].add(i)
+        observed = classifier.classify(feats)
+        testsets[observed].add(i)
     rise, maintain, fall = [], [], []
     for i in range(len(test)):
             pdist = classifier.prob_classify(test[i])
             guess = classifier.classify(test[i])
-            gold = label[i]
+            gold = labels[i]
             if gold==(1, 0, 0):
                 rise.append((guess, pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1))))
             elif gold==(0, 1, 0):
                 maintain.append((guess, pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1))))
-            if gold==(0, 0, 1):
+            elif gold==(0, 0, 1):
                 fall.append((guess, pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1))))                
             print(pdist.prob((1, 0, 0)), pdist.prob((0, 1, 0)), pdist.prob((0, 0, 1)), gold)
     print('accuracy:', nltk.classify.accuracy(classifier, test_set))
+    print('f-measure (1, 0, 0):', f_measure(refsets[(1, 0, 0)], testsets[(1, 0, 0)]))
+    print('f-measure (0, 1, 0):', f_measure(refsets[(0, 1, 0)], testsets[(0, 1, 0)]))
+    print('f-measure (0, 0, 1):', f_measure(refsets[(0, 0, 1)], testsets[(0, 0, 1)]))    
     print()
     print('rise')
     for i in rise:
