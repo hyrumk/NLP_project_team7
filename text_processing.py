@@ -7,18 +7,19 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer as sia
 from nltk.tokenize import word_tokenize, sent_tokenize
 import string
 import random
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 '''
 Adjust the variable COMPANY. It affects line 23 (text), 247 (company name) featurizer part when you change the company
 '''
-COMPANY = 'Dow Jones'
-TICKER = 'DJI'
+COMPANY = 'Apple'
+TICKER = 'AAPL'
 '''
 Loading a Text Data.
 '''
 # a list of news in a string form for each day.
-text = data_collector.load_data('dowjones', 'gfkeyword')
+text = data_collector.load_data('apple', 'gfkeyword')
 #text = data_collector.load_data('apple_technews', 'keyword')
 #text = data_collector.load_data(COMPANY.lower(), 'gfkeyword')
 print(text)
@@ -131,10 +132,8 @@ inc_list = [pair[0] for pair in inc]
 dec_list = [pair[0] for pair in dec]
 inc_bi_list = [' '.join(list(pair[0])) for pair in inc_bi]
 dec_bi_list = [' '.join(list(pair[0])) for pair in dec_bi]
-print(inc_list)
-print(dec_list)
-print(inc_bi_list)
-print(dec_bi_list)
+print('Increase Keywords\n', 'Word: ', inc_list ,'\n','Bigram: ', inc_bi_list)
+print('Decrease Keywords\n', 'Word: ', dec_list ,'\n','Bigram: ', dec_bi_list)
 
 
 '''아래 data가 training & testing에 이용될 수 있는 featureset!'''
@@ -337,8 +336,29 @@ plt.suptitle(COMPANY)
 
 plt.show()
 
+fig = plt.figure(100)
+ax = fig.add_subplot(111, projection = '3d')
+ax.scatter(x2,x3,y)
+ax.set_xlabel('Increase')
+ax.set_ylabel('Decrease')
+ax.set_zlabel('Label')
+#plt.show()
 
+fig = plt.figure(200)
+ax = fig.add_subplot(111, projection = '3d')
+ax.scatter(x4,x5,y)
+ax.set_xlabel('Inc bigram')
+ax.set_ylabel('Dec bigram')
+ax.set_zlabel('Label')
+#plt.show()
 
+fig = plt.figure(300)
+ax = fig.add_subplot(111, projection = '3d')
+ax.scatter(x6,x7,y)
+ax.set_xlabel('Inc word')
+ax.set_ylabel('Dec word')
+ax.set_zlabel('Label')
+plt.show()
 
 
 
